@@ -36,17 +36,14 @@ app.get("/dbtest", async (_req: Request, res: Response) => {
   }
 });
 
-app.get(
-  "/https://express-vercel-deployment-ashen.vercel.app/users/:id",
-  async (_req: Request, res: Response) => {
-    try {
-      const { rows } = await pool.query("SELECT id, email, name FROM users"); // adjust table name if needed
-      res.json({ success: true, users: rows });
-    } catch (error) {
-      res.status(500).json({ success: false, error: (error as Error).message });
-    }
+app.get("/users", async (_req: Request, res: Response) => {
+  try {
+    const { rows } = await pool.query("SELECT id, email, name FROM users"); // adjust table name if needed
+    res.json({ success: true, users: rows });
+  } catch (error) {
+    res.status(500).json({ success: false, error: (error as Error).message });
   }
-);
+});
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Subscribe to Arpan Neupane's channel");
