@@ -1,8 +1,13 @@
 import express, { Request, Response } from "express";
+import cors from "cors";
 import { Pool } from "pg";
 
 const app = express();
 const port = process.env.PORT || 8080;
+
+// Enable CORS for all origins (development mode)
+// This allows requests from any frontend origin
+app.use(cors());
 
 interface User {
   id: number;
