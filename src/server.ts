@@ -12,10 +12,7 @@ const port = process.env.PORT || 8080;
 app.use(
   cors({
     origin:
-      process.env.CORS_ORIGIN ||
-      "https://greek-learning-game-ts.vercel.app" ||
-      "localhost:3000" ||
-      "localhost:3001",
+      process.env.CORS_ORIGIN || "https://greek-learning-game-ts.vercel.app",
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
