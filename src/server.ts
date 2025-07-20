@@ -7,7 +7,15 @@ const port = process.env.PORT || 8080;
 
 // Enable CORS for all origins (development mode)
 // This allows requests from any frontend origin
-app.use(cors());
+// app.use(cors());
+
+// Alternatively, restrict CORS to specific frontend origin (production mode)
+// Uncomment the line below and replace with your frontend URL
+app.use(
+  cors({
+    origin: "https://greek-learning-game-ts.vercel.app/",
+  })
+);
 
 interface User {
   id: number;
