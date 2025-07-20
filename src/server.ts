@@ -37,7 +37,7 @@ app.get("/dbtest", async (_req: Request, res: Response) => {
 });
 
 app.get(
-  "/https://express-vercel-deployment-ashen.vercel.app/users",
+  "/https://express-vercel-deployment-ashen.vercel.app/users/:id",
   async (_req: Request, res: Response) => {
     try {
       const { rows } = await pool.query("SELECT id, email, name FROM users"); // adjust table name if needed
