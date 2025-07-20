@@ -2,25 +2,17 @@ import "dotenv/config";
 import express, { Request, Response, Express } from "express";
 import cors from "cors";
 import { Pool, PoolConfig } from "pg";
-
-// Types for static data
-interface User {
-  id: number;
-  name: string;
-  role: string;
-}
-
-interface SampleData {
-  message: string;
-  data: User[];
-}
+import { AppController } from "./controllers";
+import { setupRoutes } from "./routes";
+import { createDbPool } from "./conf/db";
+import { setupMiddleware } from "./conf/cors";
 
 class Server {
   private app: Express;
   private port: number;
   private pool: Pool;
-  private sampleData: SampleData;
   private corsOrigin: string;
+  private controller: AppController;
 
   constructor() {
     // Initialize properties
@@ -28,82 +20,22 @@ class Server {
     this.port = parseInt(process.env.PORT || "8080", 10);
     this.corsOrigin =
       process.env.CORS_ORIGIN || "https://greek-learning-game-ts.vercel.app";
-    this.pool = this.initializeDatabasePool();
-    this.sampleData = {
-      message: "Welcome to my Express app on Vercel!",
-      data: [
-        { id: 1, name: "John Doe", role: "Developer" },
-        { id: 2, name: "Jane Smith", role: "Designer" },
-      ],
-    };
+    this.pool = createDbPool();
+    this.controller = new AppController(this.pool);
 
     // Setup middleware and routes
     this.setupMiddleware();
     this.setupRoutes();
   }
 
-  // Encapsulate database pool initialization
-  private initializeDatabasePool(): Pool {
-    const config: PoolConfig = {
-      connectionString: process.env.DATABASE_URL,
-    };
-
-    if (process.env.DATABASE_URL) {
-      config.ssl = { rejectUnauthorized: false }; // Required for Neon on Vercel
-    }
-
-    return new Pool(config);
-  }
-
-  // Encapsulate middleware setup
+  // Encapsulate middleware setup by calling the external setup function
   private setupMiddleware(): void {
-    this.app.use(
-      cors({
-        origin: this.corsOrigin,
-        methods: ["GET", "POST", "PUT", "DELETE"],
-        allowedHeaders: ["Content-Type", "Authorization"],
-      })
-    );
-    this.app.use(express.json());
+    setupMiddleware(this.app, this.corsOrigin);
   }
 
-  // Encapsulate route definitions
+  // Encapsulate route definitions by calling the external setup function
   private setupRoutes(): void {
-    this.app.get("/", this.handleRoot.bind(this));
-    this.app.get("/testdata", this.handleTestData.bind(this));
-    this.app.get("/dbtest", this.handleDbTest.bind(this));
-    this.app.get("/users", this.handleUsers.bind(this));
-  }
-
-  // Route handlers as class methods for better organization
-  private handleRoot(req: Request, res: Response): void {
-    res.send("Subscribe to Arpan Neupane's channel");
-  }
-
-  private handleTestData(req: Request, res: Response): void {
-    res.json(this.sampleData);
-  }
-
-  private async handleDbTest(req: Request, res: Response): Promise<void> {
-    try {
-      const { rows } = await this.pool.query("SELECT NOW()");
-      res.json({ success: true, timestamp: rows[0].now });
-    } catch (error) {
-      console.error("Error in /dbtest:", error);
-      res.status(500).json({ success: false, error: (error as Error).message });
-    }
-  }
-
-  private async handleUsers(req: Request, res: Response): Promise<void> {
-    try {
-      const { rows } = await this.pool.query(
-        "SELECT id, email, name FROM users"
-      );
-      res.json({ success: true, users: rows });
-    } catch (error) {
-      console.error("Error in /users:", error);
-      res.status(500).json({ success: false, error: (error as Error).message });
-    }
+    setupRoutes(this.app, this.controller);
   }
 
   // Public method to start the server (only for local development)

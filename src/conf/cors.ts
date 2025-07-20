@@ -1,10 +1,13 @@
-// import cors from "cors";
+import express, { Express } from "express";
+import cors from "cors";
 
-// export const corsOptions = {
-//   origin:
-//     process.env.CORS_ORIGIN || "https://greek-learning-game-ts.vercel.app",
-//   methods: ["GET", "POST", "PUT", "DELETE"],
-//   allowedHeaders: ["Content-Type", "Authorization"],
-// };
-
-// export const corsMiddleware = cors(corsOptions);
+export const setupMiddleware = (app: Express, corsOrigin: string): void => {
+  app.use(
+    cors({
+      origin: corsOrigin,
+      methods: ["GET", "POST", "PUT", "DELETE"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+    })
+  );
+  app.use(express.json());
+};
