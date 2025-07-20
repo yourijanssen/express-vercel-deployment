@@ -13,7 +13,7 @@ const port = process.env.PORT || 8080;
 // Uncomment the line below and replace with your frontend URL
 app.use(
   cors({
-    origin: "https://greek-learning-game-ts.vercel.app/",
+    origin: "https://greek-learning-game-ts.vercel.app",
   })
 );
 
