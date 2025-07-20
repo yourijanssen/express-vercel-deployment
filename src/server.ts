@@ -1,18 +1,8 @@
 import express, { Request, Response } from "express";
-import cors from "cors";
 import { Pool } from "pg";
 
 const app = express();
 const port = process.env.PORT || 8080;
-
-// Enable CORS for all origins (or specify your frontend origin)
-app.use(cors()); // This allows requests from any origin
-
-app.use(
-  cors({
-    origin: "https://express-vercel-deployment-ashen.vercel.app/",
-  })
-);
 
 interface User {
   id: number;
