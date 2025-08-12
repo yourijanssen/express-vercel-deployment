@@ -20,14 +20,7 @@ class Server {
     this.port = parseInt(process.env.PORT || "8080", 10);
 
     // Correctly configure CORS origins
-    this.corsOrigin = process.env.CORS_ORIGIN
-      ? process.env.CORS_ORIGIN.split(",").map((origin) => origin.trim())
-      : [
-          "https://greek-learning-game-ts.vercel.app",
-          "https://express-vercel-deployment-ashen.vercel.app",
-          "http://localhost:3000",
-          "http://localhost:3001",
-        ];
+    this.corsOrigin = "*";
 
     this.pool = createDbPool();
     this.controller = new AppController(this.pool);
