@@ -19,7 +19,9 @@ class Server {
     this.app = express();
     this.port = parseInt(process.env.PORT || "8080", 10);
     this.corsOrigin =
-      process.env.CORS_ORIGIN || "https://greek-learning-game-ts.vercel.app";
+      process.env.CORS_ORIGIN ||
+      "https://express-vercel-deployment-ashen.vercel.app" ||
+      "http://localhost:3000";
     this.pool = createDbPool();
     this.controller = new AppController(this.pool);
 
