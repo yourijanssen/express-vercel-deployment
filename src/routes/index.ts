@@ -12,4 +12,6 @@ export const setupRoutes = (app: Express, controller: AppController): void => {
   app.post("/register", controller.handleRegister.bind(controller));
   app.post("/login", controller.handleLogin.bind(controller));
   app.post("/logout", controller.handleLogout.bind(controller));
+  app.get("/comments", controller.getComments.bind(controller));
+  app.post("/comments", controller.createComment.bind(controller));
 };

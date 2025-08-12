@@ -83,6 +83,34 @@ export class AppController {
     }
   }
 
+  public async getComments(req: Request, res: Response): Promise<void> {
+    try {
+      const { rows } = await this.pool.query(
+        "SELECT * FROM comments ORDER BY id DESC"
+      );
+      res.json({ success: true, comments: rows });
+    } catch (error) {
+      res.status(500).json({ success: false, error: String(error) });
+    }
+  }
+
+  public async createComment(req: Request, res: Response): Promise<void> {
+    try {
+      const { comment } = req.body;
+      if (!comment) {
+        res.status(400).json({ success: false, error: "Missing comment" });
+        return;
+      }
+      const { rows } = await this.pool.query(
+        "INSERT INTO comments (comment) VALUES ($1) RETURNING *",
+        [comment]
+      );
+      res.status(201).json({ success: true, comment: rows[0] });
+    } catch (error) {
+      res.status(500).json({ success: false, error: String(error) });
+    }
+  }
+
   /**
    * Handles user registration by creating a new user in the database.
    * @param {Request} req - The Express request object, expected to contain user details in the body.
