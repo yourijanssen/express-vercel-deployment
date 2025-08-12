@@ -1,13 +1,20 @@
 import express, { Express } from "express";
 import cors from "cors";
 
-export const setupMiddleware = (app: Express, corsOrigin: string): void => {
+// conf/cors.ts
+export function setupMiddleware(
+  app: Express,
+  corsOrigin: string | string[]
+): void {
   app.use(
     cors({
       origin: corsOrigin,
-      methods: ["GET", "POST", "PUT", "DELETE"],
+      credentials: true,
+      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
       allowedHeaders: ["Content-Type", "Authorization"],
     })
   );
+
   app.use(express.json());
-};
+  app.use(express.urlencoded({ extended: true }));
+}
